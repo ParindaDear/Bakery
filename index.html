@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+    <div class="container">
+        <h2>รายการพิมพ์จีบอลูมิเนียม "ชนะโลหะกิจ"</h2><br>
+        <p>คลิกปุ่ม Search 1 ครั้ง เพื่อดูรายการทั้งหมด</p><br>
+        <p>วิธีการค้นหา: พิมพ์ Keyword ที่ต้องการค้นหา -> กดเลือกประเภทของข้อมูล -> กดปุ่ม Search</p>
+        <div class="search-box">
+            <input id="txt_search" type="text" placeholder="search" style="margin-right: 10px;">
+            <select  id="sel_search">
+                <option value="id">ID</option>
+                <option value="product">Product</option>
+                <option value="price">Price</option>
+            </select>
+            <div onclick="search()" class="btn-search">
+                Search
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function search() {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "search_api.php",
+                data: {
+                    keyword: $('#txt_search').val(),
+                    type: $("#sel_search").val()
+                }, success: function(response) {
+                    console.log("good", response)
+                    var html = '';
+                    for(var i=0; i<response.result.length; i++) {
+                        html += `
+                            <tr>
+                                <td>${response.result[i].ID}</td>
+                                <td>${response.result[i].Product}</td>
+                                <td>${response.result[i].Price}</td>
+                            </tr>
+                        `;
+                    }
+                    $("#tbody").html(html)
+                }, erro: function(err) {
+                    console.log("bad", err)
+                }
+            })
+        }
+    </script>
+</body>
+</html>
+    
+</body>
+</html>
